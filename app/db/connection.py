@@ -1,14 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
-from dotenv import load_dotenv
 
-import os
+from app.core.config import settings
 
-load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-engine = create_engine(DATABASE_URL)
+engine = create_engine(settings.DB_URL)
 
 SessionLocal = sessionmaker(
     autocommit=False,
@@ -16,7 +12,6 @@ SessionLocal = sessionmaker(
     bind=engine
 )
 
-print(DATABASE_URL)
 
 class Base(DeclarativeBase):
     pass

@@ -7,19 +7,19 @@ from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 
 class CreateClientDTO(BaseModel):
-    name: str = Field(
+    cliente_nome: str = Field(
         min_length=3,
         max_length=255
     )
 
-    email: EmailStr
+    cliente_email: EmailStr
 
-    request_type: str = Field(
+    tipo_solicitacao: str = Field(
         min_length=3,
         max_length=255
     )
 
-    asset_value: Decimal = Field(gt=0)
+    valor_patrimonio: Decimal = Field(gt=0)
 
 
 class UpdateClientDTO(BaseModel):
@@ -29,7 +29,7 @@ class UpdateClientDTO(BaseModel):
         max_length=255
     )
 
-    email: EmailStr | None = None
+    cliente_email: EmailStr
 
     request_type: str | None = Field(
         default=None,
@@ -52,7 +52,7 @@ class ClientResponseDTO(BaseModel):
 
     name: str
 
-    email: EmailStr
+    cliente_email: EmailStr
 
     request_type: str
 
