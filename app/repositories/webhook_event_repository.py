@@ -37,23 +37,13 @@ class WebhookEventRepository:
 
         return event
     
-<<<<<<< HEAD
-    def find_by_cliente_email(
-        self, 
-        db: Session,
-        cliente_email: str
-    ) -> Client | None: 
-        return(
-            db.query(Client).filter(Client.cliente_email == cliente_email).first()
-=======
     def find_by_email(
         self, 
         db: Session,
         email: str
     ) -> Client | None: 
         return(
-            db.query(Client).filter(Client.email == email).first()
->>>>>>> 5a9a31a5df7709007d68de087fd5271e30c40179
+            db.query(Client).filter(Client.cliente_email == email).first()
         )
     
     def update(
@@ -66,8 +56,4 @@ class WebhookEventRepository:
 
         db.refresh(client)
 
-<<<<<<< HEAD
         return client
-=======
-        return client
->>>>>>> 5a9a31a5df7709007d68de087fd5271e30c40179
