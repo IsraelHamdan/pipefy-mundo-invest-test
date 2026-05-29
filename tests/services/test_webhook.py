@@ -1,3 +1,5 @@
+from fastapi import HTTPException
+
 import pytest
 
 from unittest.mock import Mock
@@ -146,15 +148,14 @@ class TestWebhookTests:
             card_id="card_456",
             cliente_email="pedro@gmail.com"
         )
-
-        result = service.process_card_updated(
-            db=fake_db,
-            data=payload
-        )
-
-        assert result == {
-            "message": "Event already processed"
-        }
+        
+        with pytest.raises(HTTPException) as exc:
+            service.process_card_updated(
+                db=fake_db,
+                data=payload
+            )
+        
+        assert exc.value.status_code == 409
 
         webhook_repository.exists_by_event_id.assert_called_once_with(
             fake_db,
@@ -168,3 +169,5 @@ class TestWebhookTests:
         webhook_repository.create.assert_not_called()
 
         pipefy_service.build_update_fields_values_mutation.assert_not_called()
+    
+        

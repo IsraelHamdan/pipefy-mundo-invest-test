@@ -9,6 +9,8 @@ from app.repositories.webhook_event_repository import(
 )
 from app.schema.webhook import PipefyWebhookDTO
 from app.services.pipefy_service import PipefyService
+from fastapi import HTTPException
+import logging
 
 class WebhookService: 
   def __init__(self):
@@ -24,18 +26,22 @@ class WebhookService:
       self.webhook.exists_by_event_id(db, data.event_id)
     )
 
-    if already_processed: return {
-      "message": "Event already processed"
-    }
+    if already_processed:
+      raise HTTPException(
+          status_code=409,
+          detail="Event already processed"
+      )
+
 
     client = (
       self.client.find_by_cliente_email(db, data.cliente_email)
     )
 
-    if not client: 
-      return {
-        "message": "Client not found"
-      }
+    if not client:
+      raise HTTPException(
+          status_code=404,
+          detail="Client not found"
+      )
     
     prioridade: Prioridade
 
@@ -56,8 +62,13 @@ class WebhookService:
         prioridade
     )
 
-    print(graphql_payload)
+    logger = logging.getLogger(__name__)
 
+    logger.info(
+        "Pipefy mutation generated",
+        extra={"payload": graphql_payload}
+    )
+    
     return {
       "message": "Webhook processed"
     }

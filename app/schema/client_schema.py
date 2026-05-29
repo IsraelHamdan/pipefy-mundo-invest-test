@@ -34,7 +34,6 @@ class UpdateClientDTO(BaseModel):
     )
 
     cliente_email: EmailStr
-    cliente_email: EmailStr
 
     tipo_solicitacao: str | None = Field(
         default=None,
@@ -57,7 +56,6 @@ class ClientResponseDTO(BaseModel):
 
     cliente_nome: str
 
-    cliente_email: EmailStr
     cliente_email: EmailStr
 
     tipo_solicitacao: str

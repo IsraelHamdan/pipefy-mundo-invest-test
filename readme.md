@@ -78,7 +78,7 @@ cd pipefy-mundo-invest-test
 Linux 🐧 / Mac 🍎
 
 ```bash
-cp .env.exemple .env
+cp .env.example .env
 
 ```
 
@@ -116,7 +116,7 @@ docker compose logs -f api
 
 ---
 
-#### 2. Criar anbiente para testes localmente
+#### 2. Criar ambiente para testes localmente
 
 ##### Windows -
 
@@ -147,7 +147,7 @@ pip install -r requirements.txt
 # Executando testes 🧪
 
 Afim de faciltar também dockerizei os testes, criando um container separado,
-basta executar o comando:
+basta executar o comando depois que o docker terminar de subir os containers da aplicação:
 
 ```bash
 docker compose run --rm tests
@@ -162,8 +162,8 @@ pytest -vv
 Cobertura implementada:
 
 ✓ 7 testes unitários
-✓ 2 testes de integração
-✓ 9 testes automatizados
+✓ 4 testes de integração
+✓ 11 testes automatizados
 
 ---
 
@@ -192,6 +192,17 @@ http://localhost:8000/docs#/
 }
 ```
 
+```bash
+curl -X POST http://localhost:8000/clientes \
+-H "Content-Type: application/json" \
+-d '{
+  "cliente_nome":"João Silva",
+  "cliente_email":"joao.silva@example.com",
+  "tipo_solicitacao":"Atualização cadastral",
+  "valor_patrimonio":250000
+}'
+```
+
 ### Regras
 
 - E-mail deve ser único;
@@ -215,85 +226,47 @@ http://localhost:8000/docs#/
 }
 ```
 
+```bash
+curl -X POST http://localhost:8000/webhooks/pipefy/card-updated \
+-H "Content-Type: application/json" \
+-d '{
+  "event_id":"evt_123",
+  "card_id":"card_456",
+  "cliente_email":"joao.silva@example.com",
+  "timestamp":"2026-05-29T12:00:00Z"
+}'
+```
+
 ### Regras de Negócio
 
-### Patrimônio >= R$ 200.000
+#### Patrimônio >= R$ 200.000
 
 ```text
 Prioridade: prioridade_alta
 Status: Processado
 ```
 
-### Patrimônio < R$ 200.000
+#### Patrimônio < R$ 200.000
 
 ```text
 Prioridade: prioridade_normal
 Status: Processado
 ```
 
-### Idempotência
+#### Idempotência
 
 Eventos já processados são ignorados através do controle por `event_id`.
 
 ---
 
-# Integração Pipefy
+# AWS
 
-A integração foi simulada através da construção das mutations GraphQL conforme solicitado pelo desafio.
-
-## Mutation de Criação
-
-```graphql
-createCard
-```
-
-Utilizada no cadastro do cliente.
-
----
-
-## Mutation de Atualização
-
-```graphql
-updateFieldsValues
-```
-
-Utilizada para atualização dos campos de status e prioridade após o processamento do webhook.
-
----
-
-# Testes
-
-Executar todos os testes:
-
-```bash
-pytest -vv
-```
-
-Resultado atual:
-
-```text
-9 passed
-```
-
-## Testes Unitários
-
-### Cliente
-
-- Criação com sucesso;
-- E-mail duplicado;
-- E-mail inválido;
-- Campo obrigatório ausente.
-
-### Webhook
-
-- Prioridade alta;
-- Prioridade normal;
-- Evento duplicado (idempotência).
-
-## Testes de Integração
-
-- POST /clientes;
-- POST /webhooks/pipefy/card-updated.
+- API Gateway para expor os endpoints
+- ECS Fargate para executar os containers da aplicação
+- RDS PostgreSQL para armazenar clientes e eventos processados
+- CloudWatch para logs e monitoramento
+- Secrets Manager para credenciais
+- Auto Scaling para lidar com aumento de tráfego
 
 ---
 

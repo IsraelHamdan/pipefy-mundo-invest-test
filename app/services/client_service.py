@@ -4,7 +4,7 @@ from app.schema.client_schema import CreateClientDTO
 from app.services.pipefy_service import PipefyService
 from fastapi import HTTPException
 from app.repositories.client_repository import ClientRepository
-
+import logging
 
 
 class ClientService: 
@@ -29,7 +29,13 @@ class ClientService:
          self.pipefy_service.build_create_card_mutation(data)
       )
 
-      print(graphql_payload)
+      logger = logging.getLogger(__name__)
+      logger.info(
+        "Card created",
+        extra={
+          "payload": graphql_payload
+        }
+      )
 
       return self.repository.create(db, client)
   
