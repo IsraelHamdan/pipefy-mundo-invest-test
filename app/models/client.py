@@ -5,6 +5,7 @@ from decimal import Decimal
 from sqlalchemy import String, Numeric
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import Enum as SqlEnum
+from sqlalchemy import Enum as SqlEnum
 from app.db.connection import Base
 from app.enuns.client_enuns import (
     Prioridade,

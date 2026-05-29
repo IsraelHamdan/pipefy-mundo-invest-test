@@ -8,6 +8,7 @@ from app.enuns.client_enuns import Prioridade, Status
 
 
 class CreateClientDTO(BaseModel):
+
     cliente_nome: str = Field(
         min_length=3,
         max_length=255
@@ -15,10 +16,12 @@ class CreateClientDTO(BaseModel):
 
     cliente_email: EmailStr 
 
+  
     tipo_solicitacao: str = Field(
         min_length=3,
         max_length=255
     )
+
 
     valor_patrimonio: Decimal = Field(gt=0)
 
@@ -30,6 +33,7 @@ class UpdateClientDTO(BaseModel):
         max_length=255
     )
 
+    cliente_email: EmailStr
     cliente_email: EmailStr
 
     tipo_solicitacao: str | None = Field(
@@ -53,6 +57,7 @@ class ClientResponseDTO(BaseModel):
 
     cliente_nome: str
 
+    cliente_email: EmailStr
     cliente_email: EmailStr
 
     tipo_solicitacao: str

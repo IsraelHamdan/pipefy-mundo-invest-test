@@ -6,6 +6,7 @@ from fastapi import HTTPException
 from app.repositories.client_repository import ClientRepository
 
 
+
 class ClientService: 
   def __init__(self):
     self.repository = ClientRepository()
