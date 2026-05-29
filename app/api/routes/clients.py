@@ -5,14 +5,14 @@ from app.schema.client_schema import(ClientResponseDTO, CreateClientDTO)
 from app.services.client_service import ClientService
 
 router = APIRouter(
-  prefix="/clients",
-  tags=["Clients"]
+  prefix="/clientes",
+  tags=["Clientes"]
 )
 service = ClientService()
 
 
 @router.post(
-  "/clients",
+  "",
   response_model= ClientResponseDTO
 )
 def create_client(
