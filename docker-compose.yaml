@@ -28,5 +28,14 @@ services:
       pgsql:
         condition: service_healthy
 
+  tests:
+    build: .
+    env_file:
+      - .env
+    command: pytest -vv
+    depends_on:
+      pgsql:
+        condition: service_healthy
+
 volumes:
   postgres_data:

@@ -100,7 +100,9 @@ Copy-Item .env.example .env
 
 Subir toda a aplicação:
 
+```bash
 docker compose up --build -d
+```
 
 A API ficará disponível em:
 
@@ -144,7 +146,14 @@ pip install -r requirements.txt
 
 # Executando testes 🧪
 
-Para executar os testes localmente é necessário criar um ambiente virtual Python e instalar as dependências do projeto.
+Afim de faciltar também dockerizei os testes, criando um container separado,
+basta executar o comando:
+
+```bash
+docker compose run --rm tests
+```
+
+**Para executar os testes localmente** é necessário criar um ambiente virtual Python e instalar as dependências do projeto e mudar a url de conexão do banco dentro do .env, pois como a api e o python estão rodando dentro do docker eles conversam pelo nome do serviço e não por localhost, então basta na url de conexão substituir @pgsql:5432 por @localhost:5432, mas **se for rodar localmente!**
 
 ```bash
 pytest -vv
@@ -163,7 +172,7 @@ Cobertura implementada:
 Swagger:
 
 ```text
-http://localhost:8000/docs
+http://localhost:8000/docs#/
 ```
 
 ---
