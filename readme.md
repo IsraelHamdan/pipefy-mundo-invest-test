@@ -73,7 +73,30 @@ cd pipefy-mundo-invest-test
 
 ---
 
-### 2. Subir aplicação usando Docker
+### 2. Criar arquivo env
+
+Linux 🐧 / Mac 🍎
+
+```bash
+cp .env.exemple .env
+
+```
+
+Windows 🪟
+
+```bash
+copy .env.example .env
+```
+
+ou
+
+```bash
+Copy-Item .env.example .env
+```
+
+---
+
+### 3. Subir aplicação usando Docker
 
 Subir toda a aplicação:
 
@@ -81,29 +104,37 @@ docker compose up --build -d
 
 A API ficará disponível em:
 
-<http://localhost:8000/docs>
+<http://localhost:8000/docs#/>
+
+Se quiser acompanhar os logs da api basta
+
+```bash
+docker compose logs -f api
+```
 
 ---
 
-#### 2. Criar ambiente para rodar local
+#### 2. Criar anbiente para testes localmente
 
-##### Windows - Se for rodar local no windows precisa usar o venv.
+##### Windows -
 
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
 ```
 
-##### Linux/macOS - Se for rodar local no windows precisa usar o venv.
+##### Linux/macOS
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
+
 source .venv/bin/activate
+
 ```
 
 ---
 
-## 3. Instalar dependências
+##### 3. Instalar dependências
 
 ```bash
 pip install -r requirements.txt
@@ -111,39 +142,19 @@ pip install -r requirements.txt
 
 ---
 
-## 4. Subir PostgreSQL
-
-```bash
-docker compose up -d
-```
-
----
-
-## 5. Inicializar o banco
-
-```bash
-python -m app.db.init_db
-```
-
----
-
-## 6. Executar a API
-
-```bash
-uvicorn app.main:app --reload
-```
-
----
-
 # Executando testes 🧪
 
-Para executar a suíte de testes completamente basta executar um comando
+Para executar os testes localmente é necessário criar um ambiente virtual Python e instalar as dependências do projeto.
 
 ```bash
 pytest -vv
 ```
 
-Resultado atual: 9 passed
+Cobertura implementada:
+
+✓ 7 testes unitários
+✓ 2 testes de integração
+✓ 9 testes automatizados
 
 ---
 
@@ -277,7 +288,7 @@ Resultado atual:
 
 ---
 
-# Melhorias Futuras
+# Melhorias Futuras para produção
 
 Em um ambiente produtivo seriam considerados:
 
