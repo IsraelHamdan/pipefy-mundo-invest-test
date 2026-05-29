@@ -259,27 +259,105 @@ Eventos já processados são ignorados através do controle por `event_id`.
 
 ---
 
-# AWS
+# Visão de Produção AWS
 
-- API Gateway para expor os endpoints
-- ECS Fargate para executar os containers da aplicação
-- RDS PostgreSQL para armazenar clientes e eventos processados
-- CloudWatch para logs e monitoramento
-- Secrets Manager para credenciais
-- Auto Scaling para lidar com aumento de tráfego
+Embora o desafio tenha sido desenvolvido utilizando Docker e PostgreSQL local, em um ambiente produtivo a arquitetura poderia ser escalada utilizando serviços gerenciados da AWS.
+
+## Entrada das Requisições
+
+Os endpoints da aplicação poderiam ser publicados através do **Amazon API Gateway**, responsável por receber as requisições HTTP externas, aplicar controle de acesso, monitoramento e limitação de tráfego.
+
+## Camada de Aplicação
+
+A API FastAPI poderia ser executada em containers utilizando **Amazon ECS Fargate**, eliminando a necessidade de gerenciamento de servidores. Dessa forma seria possível aumentar ou reduzir automaticamente a quantidade de instâncias da aplicação de acordo com a demanda.
+
+Fluxo:
+
+```text
+Cliente
+  ↓
+API Gateway
+  ↓
+ECS Fargate (FastAPI)
+```
+
+## Banco de Dados
+
+Os dados dos clientes e dos eventos processados seriam armazenados em um **Amazon RDS PostgreSQL**, mantendo compatibilidade com a implementação atual.
+
+O RDS fornece:
+
+- Backups automáticos;
+- Replicação;
+- Atualizações gerenciadas;
+- Monitoramento integrado;
+- Alta disponibilidade através de Multi-AZ.
+
+Fluxo:
+
+```text
+FastAPI
+   ↓
+RDS PostgreSQL
+```
+
+## Processamento de Webhooks
+
+Em cenários de alto volume, o endpoint de webhook poderia publicar os eventos em uma fila utilizando **Amazon SQS**.
+
+Dessa forma a API responderia rapidamente ao Pipefy sem depender do processamento completo da regra de negócio.
+
+Fluxo:
+
+```text
+Pipefy
+   ↓
+API Gateway
+   ↓
+FastAPI
+   ↓
+SQS
+   ↓
+Worker de Processamento
+   ↓
+RDS PostgreSQL
+```
+
+Essa abordagem reduz o risco de perda de eventos e melhora a capacidade de processamento em picos de carga.
+
+## Logs e Monitoramento
+
+Os logs da aplicação poderiam ser enviados para o **Amazon CloudWatch**, permitindo:
+
+- Centralização dos logs;
+- Métricas de utilização;
+- Alarmes automáticos;
+- Rastreamento de falhas.
+
+## Gerenciamento de Credenciais
+
+Informações sensíveis como credenciais do banco de dados e tokens de integração com o Pipefy poderiam ser armazenadas no **AWS Secrets Manager**, evitando exposição em arquivos de configuração ou imagens Docker.
+
+## Escalabilidade
+
+A arquitetura proposta permite:
+
+- Escalabilidade horizontal da API através do ECS Fargate;
+- Escalabilidade vertical e horizontal do banco via RDS;
+- Processamento assíncrono dos webhooks através de filas;
+- Alta disponibilidade com serviços gerenciados da AWS.
+
+Essa abordagem mantém a mesma regra de negócio implementada no desafio, porém preparada para atender volumes significativamente maiores de clientes e eventos.
 
 ---
 
-# Melhorias Futuras para produção
+# Outras melhorias Futuras para produção
 
 Em um ambiente produtivo seriam considerados:
 
 - Alembic para versionamento de banco;
 - Integração real com a API GraphQL do Pipefy;
-- Logs estruturados;
-- CI/CD;
-- Deploy em AWS;
-- Monitoramento e observabilidade.
+- CI/CD;- Monitoramento e observabilidade.
 
 ---
 
