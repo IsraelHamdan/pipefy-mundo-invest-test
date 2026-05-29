@@ -4,6 +4,7 @@ from decimal import Decimal
 from datetime import datetime
 
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
+from app.enuns.client_enuns import Prioridade, Status
 
 
 class CreateClientDTO(BaseModel):
@@ -12,7 +13,7 @@ class CreateClientDTO(BaseModel):
         max_length=255
     )
 
-    cliente_email: EmailStr
+    cliente_email: EmailStr 
 
     tipo_solicitacao: str = Field(
         min_length=3,
@@ -23,7 +24,7 @@ class CreateClientDTO(BaseModel):
 
 
 class UpdateClientDTO(BaseModel):
-    name: str | None = Field(
+    cliente_nome: str | None = Field(
         default=None,
         min_length=3,
         max_length=255
@@ -31,36 +32,36 @@ class UpdateClientDTO(BaseModel):
 
     cliente_email: EmailStr
 
-    request_type: str | None = Field(
+    tipo_solicitacao: str | None = Field(
         default=None,
         min_length=3,
         max_length=255
     )
 
-    asset_value: Decimal | None = Field(
+    valor_patrimonio: Decimal | None = Field(
         default=None,
         gt=0
     )
 
-    status: str | None = None
+    status: Status | None = None
 
-    priority: str | None = None
+    prioridade: Prioridade | None = None
 
 
 class ClientResponseDTO(BaseModel):
     id: uuid.UUID
 
-    name: str
+    cliente_nome: str
 
     cliente_email: EmailStr
 
-    request_type: str
+    tipo_solicitacao: str
 
-    asset_value: Decimal
+    valor_patrimonio: Decimal
 
-    status: str
+    status: Status
 
-    priority: str | None
+    prioridade: Prioridade | None
 
     model_config = ConfigDict(
         from_attributes=True

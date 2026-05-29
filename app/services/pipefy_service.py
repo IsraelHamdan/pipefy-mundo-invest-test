@@ -1,4 +1,4 @@
-from app.models.client import Client
+from app.enuns.client_enuns import Prioridade, Status
 from app.schema.client_schema import CreateClientDTO
 
 from app.types.graphql import GraphQLPayload
@@ -57,38 +57,39 @@ class PipefyService:
         }
 
 
-    def build_update_card_mutation(
+    def build_update_fields_values_mutation(
         self,
         card_id: str,
-        priority: str
-    ):
+        prioridade: Prioridade
+    ) -> GraphQLPayload:
 
         query = """
-        mutation UpdateCardField(
-            $card_id: ID!,
-            $field_id: String!,
-            $new_value: String!
-        ) {
-        updateCardField(
-            input: {
-            card_id: $card_id
-            field_id: $field_id
-            new_value: $new_value
-            }
-        ) {
-            card {
-            id
-            }
-        }
+            mutation UpdateFieldsValues(
+            $input: UpdateFieldsValuesInput!
+            ) {
+                updateFieldsValues(
+                    input: $input
+                ) {
+                    success
+                }
         }
         """
 
         variables = {
-            "card_id": card_id,
-            "field_id": "prioridade",
-            "new_value": priority
+            "input": {
+                "nodeId": card_id,
+                "values": [
+                    {
+                        "fieldId": "status",
+                        "value": Status.PROCESSADO.value
+                    },
+                    {
+                        "fieldId": "prioridade",
+                        "value": prioridade.value
+                    }
+                ]
+            }
         }
-
         return {
             "query": query,
             "variables": variables

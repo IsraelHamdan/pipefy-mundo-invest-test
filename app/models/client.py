@@ -7,12 +7,17 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import Enum as SqlEnum
 from app.db.connection import Base
 from app.enuns.client_enuns import (
-    ClientPriority,
-    ClientStatus
+    Prioridade,
+    Status
 )
 
+
+def enum_values(enum_cls):
+    return [item.value for item in enum_cls]
+
+
 class Client(Base):
-    __tablename__ = "clients"
+    __tablename__ = "clientes"
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -20,25 +25,35 @@ class Client(Base):
         default=uuid.uuid4
     )
 
-    name: Mapped[str] = mapped_column(String(255))
+    cliente_nome: Mapped[str] = mapped_column(String(255))
 
-    email: Mapped[str] = mapped_column(
+    cliente_email: Mapped[str] = mapped_column(
         String(255),
         unique=True
     )
 
-    request_type: Mapped[str] = mapped_column(String(255))
+    tipo_solicitacao: Mapped[str] = mapped_column(String(255))
 
-    asset_value: Mapped[Decimal] = mapped_column(
+    valor_patrimonio: Mapped[Decimal] = mapped_column(
         Numeric(10, 2)
     )
 
-    status: Mapped[ClientStatus] = mapped_column(
-        SqlEnum(ClientStatus)
+    status: Mapped[Status] = mapped_column(
+        SqlEnum(
+            Status,
+            name="cliente_status",
+            values_callable=enum_values,
+            validate_strings=True
+        )
     )
 
-    priority: Mapped[ClientPriority | None] = mapped_column(
-        SqlEnum(ClientPriority),
+    prioridade: Mapped[Prioridade | None] = mapped_column(
+        SqlEnum(
+            Prioridade,
+            name="cliente_prioridade",
+            values_callable=enum_values,
+            validate_strings=True
+        ),
         nullable=True
     )
 

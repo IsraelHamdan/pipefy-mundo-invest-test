@@ -14,15 +14,15 @@ class ClientRepository:
 
         return client
 
-    def find_by_email(
+    def find_by_cliente_email(
         self,
         db: Session,
-        email: str
+        cliente_email: str
     ) -> Client | None:
 
         return (
             db.query(Client)
-            .filter(Client.email == email)
+            .filter(Client.cliente_email == cliente_email)
             .first()
         )
 

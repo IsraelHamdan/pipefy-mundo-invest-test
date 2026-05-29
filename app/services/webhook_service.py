@@ -1,6 +1,6 @@
 from decimal import Decimal
 from sqlalchemy.orm import Session
-from app.enuns.client_enuns import ClientPriority, ClientStatus
+from app.enuns.client_enuns import Prioridade, Status
 from app.repositories.client_repository import(
   ClientRepository
 )
@@ -29,7 +29,7 @@ class WebhookService:
     }
 
     client = (
-      self.client.find_by_email(db, data.cliente_email)
+      self.client.find_by_cliente_email(db, data.cliente_email)
     )
 
     if not client: 
@@ -37,23 +37,23 @@ class WebhookService:
         "message": "Client not found"
       }
     
-    if client.asset_value >= Decimal("200000"):
-      client.priority = ClientPriority.HIGH
-    else:
-        client.priority = ClientPriority.NORMAL
-    
-    client.status = ClientStatus.WAITING_ANALYSIS
+    prioridade: Prioridade
 
+    if client.valor_patrimonio >= Decimal("200000"):
+        prioridade = Prioridade.PRIORIDADE_ALTA
+    else:
+        prioridade = Prioridade.PRIORIDADE_NORMAL
+
+    client.prioridade = prioridade
+    client.status = Status.PROCESSADO
 
     self.client.update(db, client)
 
     self.webhook.create(db, data.event_id)
 
-    graphql_payload= (
-      self.pipefy_service.build_update_card_mutation(
-          data.card_id,
-          ClientPriority.HIGH
-      )
+    graphql_payload = self.pipefy_service.build_update_fields_values_mutation(
+        data.card_id,
+        prioridade
     )
 
     print(graphql_payload)
@@ -61,4 +61,3 @@ class WebhookService:
     return {
       "message": "Webhook processed"
     }
-

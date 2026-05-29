@@ -1,13 +1,11 @@
 from enum import Enum
 
 
-class ClientPriority(str, Enum):
-    HIGH = "Alta"
-    NORMAL = "Normal"
+class Prioridade(str, Enum):
+    PRIORIDADE_ALTA = "prioridade_alta"
+    PRIORIDADE_NORMAL = "prioridade_normal"
 
 
-class ClientStatus(str, Enum):
-    WAITING_ANALYSIS = "Aguardando Análise"
-    IN_ANALYSIS = "Em Análise"
-    APPROVED = "Aprovado"
-    REJECTED = "Rejeitado"
+class Status(str, Enum):
+    AGUARDANDO_ANALISE = "Aguardando Análise"
+    PROCESSADO = "Processado"
