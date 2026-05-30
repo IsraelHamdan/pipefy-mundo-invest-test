@@ -12,7 +12,7 @@ O sistema simula a integração entre uma API interna de clientes e o Pipefy atr
 - Controle de idempotência de eventos;
 - Persistência dos dados em PostgreSQL.
 
----
+## Vídeo de devesa: <https://www.youtube.com/watch?v=dLPzmYnF4Kg>
 
 ## Tecnologias Utilizadas
 
@@ -104,11 +104,15 @@ Subir toda a aplicação:
 docker compose up --build -d
 ```
 
-A API ficará disponível em:
+## Swagger
 
-<http://localhost:8000/docs#/>
+A documentação da API está disponível em:
 
-Se quiser acompanhar os logs da api basta
+<http://localhost:8000/docs>
+
+Caso o ambiente resolva `localhost` para IPv6 (`::1`) e ocorra falha de conexão, utilize:
+
+<http://127.0.0.1:8000/docs>
 
 ```bash
 docker compose logs -f api
